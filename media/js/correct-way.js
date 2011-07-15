@@ -82,7 +82,7 @@ $(function () {
 
     // create report
     function startCreateReport(info) {
-        searchPanes.hide();
+        searchPanes.children().hide();
         
         create.find("input[name=node_id]").val(info.nodeId);
         create.find("input[name=lat]").val(info.lat);
