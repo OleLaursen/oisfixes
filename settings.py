@@ -22,6 +22,9 @@ DATABASES = {
     }
 }
 
+# Define this in local_settings.py
+SECRET_KEY = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -109,6 +112,9 @@ INSTALLED_APPS = (
 )
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30 * 6
+
+# OSM_OAUTH_KEY and OSM_OAUTH_SECRET and SECRET_KEY should be defined
+# in local_settings.py which should not be committed.
 
 try:
     from local_settings import *
