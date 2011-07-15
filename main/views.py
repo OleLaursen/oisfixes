@@ -98,10 +98,13 @@ def search_for_address_nodes(request):
             extract_address_node_results(xml, ways)
             
         #extract_address_node_results(open("tmp.xml").read(), ways)
+
+    results = ways.values()
+    results.sort(key=lambda x: (x["municipality_no"], x["street_no"]))
     
     return HttpResponse(simplejson.dumps(dict(
                 name=name,
-                results=ways.values(),
+                results=results,
                 )), mimetype="application/json")
 
 
