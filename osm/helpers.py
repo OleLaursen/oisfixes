@@ -53,13 +53,11 @@ from django.conf import settings
 consumer = oauth.Consumer(settings.OSM_OAUTH_KEY, settings.OSM_OAUTH_SECRET)
 client = oauth.Client(consumer)
 
-OSM_BASE_URL = "http://api06.dev.openstreetmap.org/"
-
 class OAuthException(Exception): pass
 
 def do_oauth_authentication(request):
     # Step 1. Get a request token from Twitter.
-    resp, content = client.request(OSM_BASE_URL + "oauth/request_token", "GET")
+    resp, content = client.request(settings.OSM_BASE_URL + "oauth/request_token", "GET")
     if resp['status'] != '200':
         raise Exception("Invalid OAuth response.")
 
@@ -68,7 +66,7 @@ def do_oauth_authentication(request):
 
     # Step 3. Redirect the user to the authentication URL.
     url = "%s?oauth_token=%s&oauth_callback=%s" % (
-        OSM_BASE_URL + "oauth/authorize",
+        settings.OSM_BASE_URL + "oauth/authorize",
         request.session['oauth_request_token']['oauth_token'],
         urlquote(request.build_absolute_uri(request.get_full_path() + "?oauth_authenticated=1"))
         )
@@ -83,7 +81,7 @@ def oauth_authenticated(request):
     client = oauth.Client(consumer, token)
 
     # Step 2. Request the authorized access token from the service.
-    resp, content = client.request(OSM_BASE_URL + "oauth/access_token", "GET")
+    resp, content = client.request(settings.OSM_BASE_URL + "oauth/access_token", "GET")
     if resp['status'] != '200':
         raise OAuthException("Invalid OAuth response.")
 
@@ -117,7 +115,7 @@ def fill_in_osm_user(request):
     access_token = request.session['oauth_access_token']
     token = oauth.Token(access_token['oauth_token'], access_token['oauth_token_secret'])
     client = oauth.Client(consumer, token)
-    resp, content = client.request(OSM_BASE_URL + "api/0.6/user/details", "GET")
+    resp, content = client.request(settings.OSM_BASE_URL + "api/0.6/user/details", "GET")
 
     if resp['status'] != '200':
         raise OAuthException("Invalid user details response %s." % resp['status'])
