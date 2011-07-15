@@ -1,0 +1,65 @@
+/* searching */
+
+form.search {
+  margin: 30px;
+}
+
+form.search input {
+  font-size: 20px;
+  color: #333;
+}
+
+form.search input.name {
+  width: 20em;
+  padding: 5px;
+  border: 1px solid #aaa;
+}
+
+form.search input.submit {
+  margin-left: 0.5em;
+}
+
+.searchPanes .results table {
+  font-size: 16px;
+}
+
+.searchPanes .results th {
+  font-size: 13px;
+}
+
+/* create report */
+
+.create {
+  margin-top: 20px;
+}
+
+.create table td {
+  padding-right: 0.5em;
+}
+
+.create table input.code {
+  width: 4em;
+}
+
+.create table input {
+  width: 20em;
+}
+
+.create form .explanation {
+  font-size: 11px;
+}
+
+.create form .explanation a {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.create table .submitCell {
+  padding-top: 1em;
+  text-align: right;
+}
+
+.create table input.submit {
+  font-size: 20px;
+}
+

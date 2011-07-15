@@ -1,0 +1,56 @@
+<h1>{{ request.page.title }}</h1>
+
+{% load truncate %}
+
+<p class="explanation">
+  {% if show_deleted and show_user %}
+  Viser nu slettede rettelser lavet af {{ show_user.name }}.
+  <a href="{% url main.views.corrections %}?bruger={{ show_user.id }}">Vis nuværende rettelser</a>.
+  {% endif %}
+  {% if show_deleted and not show_user %}
+  Viser nu slettede rettelser.
+  <a href="{% url main.views.corrections %}">Vis alle rettelser</a>.
+  {% endif %}
+  {% if not show_deleted and show_user %}
+  Viser nu rettelser lavet af {{ show_user.name }}.
+  <a href="{% url main.views.corrections %}?bruger={{ show_user.id }}&slettet=1">Vis slettede rettelser</a>.
+  {% endif %}
+  {% if not show_deleted and not show_user %}
+  Viser alle rettelser.
+  <a href="{% url main.views.corrections %}?slettet=1">Vis slettede rettelser</a>.
+  {% endif %}
+</p>
+
+<table class="topHeadings" cellspacing="0" cellpadding="0">
+  <tr>
+    <th>Tidligere</th>
+    <th>Nyt navn</th>
+    <th>Forklaring</th>
+    <th>Oprettet af</th>
+    <th>Oprettet</th>
+    {% if show_deleted %}
+    <th>Slettet af</th>
+    <th>Slettet</th>
+    <th>Bemærkning</th>
+    {% endif %}
+    <th colspan="10">Handlinger</th>
+  </tr>
+  {% for c in corrections %}
+  <tr>
+    <td>{{ c.old_name }}</td>
+    <td>{{ c.new_name }}</td>
+    <td>{{ c.comment|truncate:"20" }}</td>
+    <td>{{ c.created_by }} {#(<a href="?bruger={{ c.created_by_id }}{% if show_deleted %}&slettet=1{% endif %}">vis</a>)#}</td>
+    <td>{{ c.created|date:"G:i j/n-Y" }}</td>
+    {% if show_deleted %}
+    <td>{{ c.deleted_by }} {#(<a href="?bruger={{ c.deleted_by_id }}{% if show_deleted %}&slettet=1{% endif %}">vis</a>)#}</td>
+    <td>{{ c.deleted|date:"G:i j/n-Y" }}</td>
+    <td><a {% if c.deleted_replaced_by %}href="{% url main.views.correction_details correction_id=c.deleted_replaced_by_id %}"{% endif %}>{{ c.deleted_comment|truncate:"20" }}</a></td>
+    {% endif %}
+    <td><a href="{% url main.views.correction_details correction_id=c.id %}">detaljer</a></td>
+    <td><a title="Vis et af vejens adressepunkter på OpenStreetMap" href="http://www.openstreetmap.org/?node={{ c.node_id }}"><img src="{{ MEDIA_URL }}images/osm.png"></a></td>
+  </tr>
+  {% endfor %}
+</table>
+
+<p class="back">Tilbage til <a href="{% url main.views.intro %}">forside</a>.</p>

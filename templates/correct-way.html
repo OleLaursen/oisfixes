@@ -1,0 +1,88 @@
+<h1>{{ request.page.title }}</h1>
+
+<p>Søg efter OIS/OSAK-adressepunkter med forkert vejnavn (fx "Vedstedve"):</p>
+
+<form class="search" method="GET" action="{% url main.views.search_for_address_nodes %}">
+  <input class="name" type="text" name="name" value="{{ name }}">
+  <input class="submit" type="submit" value="Søg">
+</form>
+
+<div class="searchPanes">
+  <div style="display:none" class="results">
+    <p class="summary explanation"></p>
+    <table class="topHeadings" cellspacing="0" cellpadding="0">
+      <thead>
+        <tr>
+          <th>Adresse</th>
+          <th title="Kommunekode">Kmn</th>
+          <th title="Vejkode">Vej</th>
+          <th colspan="10">Handling</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div style="display:none" class="noResults">
+    <p>Ingen adressepunkter fundet i OpenStreetMap XAPI. Prøv at
+    kopiere navnet direkte fra redigeringsprogrammet - det skal være
+    nøjagtigt magen til (der skelnes også mellem store og små
+    bogstaver).</p>
+  </div>
+
+  <div style="display:none" class="error">
+    <p></p>
+  </div>
+  <div style="display:none" class="loading">
+    <p><img src="{{ MEDIA_URL }}images/ajax-loader.gif">
+    Slår op efter punkter med addr:street eller osak:street sat til <span class="name"></span>.</p>
+  </div>
+
+  <img id="osm" style="display:none" src="{{ MEDIA_URL }}images/osm.png">
+</div>
+
+<div class="create" style="display:none">
+  <h2>Ret vejnavn</h2>
+
+  <p class="result"></p>
+  
+  <form method="POST" action="{% url main.views.create_way_correction %}">
+    <input type="hidden" name="node_id">
+    <input type="hidden" name="lat">
+    <input type="hidden" name="lon">
+    <table cellspacing="0" cellpadding="0">
+      <tr>
+        <td>Kommunekode:</td>
+        <td><input class="code" name="municipality_no" type="text" readonly></td>
+      </tr>
+      <tr>
+        <td>Vejkode:</td>
+        <td><input class="code" name="street_no" type="text" readonly></td>
+      </tr>
+      <tr>
+        <td>OIS/OSAK-navn:</td>
+        <td><input class="name" name="old_name" type="text" readonly></td>
+      </tr>
+      <tr>
+        <td>Rettet navn:</td>
+        <td><input class="name" name="new_name" type="text"></td>
+      </tr>
+      <tr>
+        <td>Forklaring:</td>
+        <td><input class="comment" name="comment" type="text"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="explanation">(fx "<a>Mangler punktum</a>", "<a>Stavefejl</a>", "<a>Forkortelse</a>")</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="submitCell"><input class="submit" type="submit" value="Gem"></td>
+      </tr>
+    </table>
+    {% csrf_token %}
+  </form>
+</div>
+
+
+<p class="back">Tilbage til <a href="{% url main.views.intro %}">forside</a>.</p>
