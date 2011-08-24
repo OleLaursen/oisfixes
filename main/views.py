@@ -78,7 +78,7 @@ def search_for_address_nodes(request):
     if name:
         # ask OpenStreetMap XAPI for address nodes
         
-        xapi_base_url = "http://jxapi.openstreetmap.org/xapi/api/0.6/"
+        xapi_base_url = "http://open.mapquestapi.com/xapi/api/0.6/"
 
         ois_street_keys = ["addr:street", "osak:street"]
         
