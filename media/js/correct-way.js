@@ -138,4 +138,9 @@ $(function () {
             }
         });
     });
+
+    // setup
+    var val = $("form.search input[name=name]");
+    if (val)
+        $("form.search").submit();
 });
