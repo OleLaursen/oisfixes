@@ -54,6 +54,15 @@ $(function () {
         });
 
         showPane(searchPanes, ".results");
+
+        // check if we should try to click on one immediately
+        if (autoselectMunicipalityNo != null && autoselectStreetNo != null) {
+            tbody.find("a.create").each(function () {
+                if ($(this).data("municipalityNo") == autoselectMunicipalityNo
+                    && $(this).data("streetNo") == autoselectStreetNo)
+                    $(this).click();
+            });
+        }
     }
 
     $("form.search").submit(function (e) {
@@ -139,8 +148,8 @@ $(function () {
         });
     });
 
-    // setup
-    var val = $("form.search input[name=name]");
+    // check if we should fire search right away
+    var val = $("form.search input[name=name]").val();
     if (val)
         $("form.search").submit();
 });

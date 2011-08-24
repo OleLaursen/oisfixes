@@ -33,9 +33,20 @@ def correct_way(request):
     request.page.css.append("correct-way.css")
 
     name = request.GET.get("navn", "")
+    municipality_no = request.GET.get("kmn")
+    street_no = request.GET.get("vej")
     
+    try:
+        municipality_no = int(municipality_no)
+        street_no = int(street_no)
+    except (ValueError, TypeError):
+        municipality_no = "null"
+        street_no = "null"
+        
     request.page.content = render_to_string("correct-way.html",
-                                            dict(name=name),
+                                            dict(name=name,
+                                                 municipality_no=municipality_no,
+                                                 street_no=street_no),
                                             context_instance=RequestContext(request))
 
     return render_page(request)

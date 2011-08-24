@@ -1,6 +1,6 @@
 <h1>{{ request.page.title }}</h1>
 
-<p class="explanation">Skriv en kort forklaring på hvorfor rettelsen skal slettes. Hvis du gerne vil overskrive den, kan du i stedet <a href="{% url main.views.correct_way %}">oprette en ny rettelse</a>.</p>
+<p class="explanation">Skriv en kort forklaring på hvorfor rettelsen skal slettes. Hvis du gerne vil overskrive den, kan du i stedet <a href="{% url main.views.correct_way %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">oprette en ny rettelse</a>.</p>
 
 <form method="POST" action="">
   {% csrf_token %}
