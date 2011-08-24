@@ -7,3 +7,7 @@ The data is updated by the local municipalities in Denmark
 (kommunerne) and is generally of a really high quality. But of course
 some mistakes have been found so a repository is needed to collect
 them and ensure the OpenStreetMap OIS/OSAK importer can amend them.
+
+The source code for this project is released under the GPL version 3
+as published by the Free Software Foundation, or at your option, any
+later version.
