@@ -27,6 +27,10 @@ form.search input.submit {
   font-size: 13px;
 }
 
+.searchPanes .results td .create {
+  margin-left: 0.8em;
+}
+
 /* create report */
 
 .create {

@@ -15,20 +15,21 @@
   {% endif %}
 </table>
 
+{% if not c.deleted %}
+<p class="buttons">
+  <a href="{% url main.views.correct_way %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">ret</a>
+  <a href="{% url main.views.delete_correction correction_id=c.id %}">slet</a>
+  <a href="http://osm.ter.dk/address_street.php?MunicipalityCode={{ c.municipality_no }}&StreetCode={{ c.street_no }}">genimportér adressepunkter</a>
+</p>
+{% endif %}
+
 <h2>Vis på kort</h2>
 
-<p>Vis på kort:
-<a href="http://www.openstreetmap.org/?node={{ c.node_id }}">adressepunkt gemt ved oprettelse</a>,
-<a href="http://www.openstreetmap.org/?lat={{ c.lat }}&lon={{ c.lon }}&zoom=17">placering gemt ved oprettelse</a></div>
+<p class="explanation">(gemt ved oprettelse)</p>
 
-{% if not c.deleted %}
-<h2>Handlinger</h2>
-
-<div>Handlinger:
-<a href="{% url main.views.correct_way %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">ret</a>,
-<a href="{% url main.views.delete_correction correction_id=c.id %}">slet</a>,
-<a href="http://osm.ter.dk/address_street.php?MunicipalityCode={{ c.municipality_no }}&StreetCode={{ c.street_no }}">genimportér adressepunkter</a>
-</div>
-{% endif %}
+<p class="buttons" >
+  <a href="http://www.openstreetmap.org/?node={{ c.node_id }}">adressepunkt</a>
+  <a href="http://www.openstreetmap.org/?lat={{ c.lat }}&lon={{ c.lon }}&zoom=17">placering</a>
+</p>
 
 <p class="back">Tilbage til <a href="{% url main.views.intro %}">forside</a>.</p>

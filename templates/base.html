@@ -7,7 +7,8 @@
     <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/{{ filename }}">{% endfor %}
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     {% for filename in request.page.js %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/{{ filename }}"></script>{% endfor %}
+    
+    <script type="text/javascript" src="{% if "http://" in filename %}{{ filename }}{% else %}{{ MEDIA_URL }}js/{{ filename }}{% endif %}"></script>{% endfor %}
   </head>
   <body>
     {{ request.page.content }}

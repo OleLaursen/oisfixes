@@ -33,7 +33,7 @@
     <th>Slettet</th>
     <th>Bemærkning</th>
     {% endif %}
-    <th colspan="10">Handlinger</th>
+    <th colspan="10"></th>
   </tr>
   {% for c in corrections %}
   <tr>
@@ -47,8 +47,8 @@
     <td>{{ c.deleted|date:"G:i j/n-Y" }}</td>
     <td><a {% if c.deleted_replaced_by %}href="{% url main.views.correction_details correction_id=c.deleted_replaced_by_id %}"{% endif %}>{{ c.deleted_comment|truncate:"20" }}</a></td>
     {% endif %}
-    <td><a href="{% url main.views.correction_details correction_id=c.id %}">info</a></td>
-    <td><a href="{% url main.views.correct_way %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">ret</a></td>
+    <td><a class="info button" href="{% url main.views.correction_details correction_id=c.id %}">info</a></td>
+    <td><a class="button" href="{% url main.views.correct_way %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">ret</a></td>
     <td><a title="Vis et af vejens adressepunkter på OpenStreetMap" href="http://www.openstreetmap.org/?node={{ c.node_id }}"><img src="{{ MEDIA_URL }}images/osm.png"></a></td>
   </tr>
   {% endfor %}

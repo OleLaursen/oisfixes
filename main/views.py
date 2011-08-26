@@ -195,6 +195,7 @@ def correction_details(request, correction_id):
     correction = get_object_or_404(WayCorrection, id=correction_id)
     
     request.page = Page()
+    request.page.js.append("http://www.openlayers.org/api/OpenLayers.js")
     request.page.title = u"OIS-rettelse %s" % correction.id
     request.page.content = render_to_string("correction-details.html",
                                             dict(c=correction),

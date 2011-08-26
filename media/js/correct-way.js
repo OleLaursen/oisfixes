@@ -38,7 +38,7 @@ $(function () {
             html.push(format('<td>{0} ({1} {2})</td>', data.name, o.node_postcode, o.node_city));
             html.push("<td>" + o.municipality_no + "</td>");
             html.push("<td>" + o.street_no + "</td>");
-            html.push(format('<td><a class="create" title="Ret navnet på denne vej" href="" data-street="{0}" data-municipality-no="{1}" data-street-no="{2}" data-node-id="{3}" data-lat="{4}" data-lon="{5}">ret</a></td>', data.name, o.municipality_no, o.street_no, o.node_id, o.node_lat, o.node_lon));
+            html.push(format('<td><a class="create button" title="Ret navnet på denne vej" href="" data-street="{0}" data-municipality-no="{1}" data-street-no="{2}" data-node-id="{3}" data-lat="{4}" data-lon="{5}">ret</a></td>', data.name, o.municipality_no, o.street_no, o.node_id, o.node_lat, o.node_lon));
             html.push(format('<td><a title="Vis et af vejens adressepunkter på OpenStreetMap" href="http://www.openstreetmap.org/?node={0}"><img src="{1}"></a></td>', o.node_id, osmSrc));
             html.push("</tr>");
         }
