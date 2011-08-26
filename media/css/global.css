@@ -95,6 +95,14 @@ a.button:hover {
 }
 
 .map {
-  width: 20em;
-  height: 15em;
+  width: 30em;
+  height: 20em;
+}
+
+.map div.olControlAttribution, .map div.olControlScaleLine {
+  bottom: 3px;
+}
+
+.map div.olControlPanZoom {
+  display: none;
 }

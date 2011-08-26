@@ -1,5 +1,7 @@
 <h1>{{ request.page.title }}</h1>
 
+<div class="map" data-lat="{{ c.lat }}" data-lon="{{ c.lon }}"></div>
+
 <table cellspacing="0" cellpadding="0">
   <tr><td>Kommunekode:</td><td>{{ c.municipality_no }}</td></tr>
   <tr><td>Vejkode:</td><td>{{ c.street_no }}</td></tr>
@@ -23,6 +25,7 @@
 </p>
 {% endif %}
 
+{% comment %}
 <h2>Vis på kort</h2>
 
 <p class="explanation">(gemt ved oprettelse)</p>
@@ -31,5 +34,7 @@
   <a href="http://www.openstreetmap.org/?node={{ c.node_id }}">adressepunkt</a>
   <a href="http://www.openstreetmap.org/?lat={{ c.lat }}&lon={{ c.lon }}&zoom=17">placering</a>
 </p>
+
+{% endcomment %}
 
 <p class="back">Tilbage til <a href="{% url main.views.intro %}">forside</a>.</p>

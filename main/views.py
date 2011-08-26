@@ -196,6 +196,8 @@ def correction_details(request, correction_id):
     
     request.page = Page()
     request.page.js.append("http://www.openlayers.org/api/OpenLayers.js")
+    request.page.js.append("map.js")
+    request.page.css.append("correction-details.css")
     request.page.title = u"OIS-rettelse %s" % correction.id
     request.page.content = render_to_string("correction-details.html",
                                             dict(c=correction),
