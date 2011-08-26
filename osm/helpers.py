@@ -45,7 +45,7 @@ def extract_address_node_results(xml, ways):
 # requires python-oauth2, from the example in the documentation
 # at https://github.com/dgouldin/python-oauth2
 import oauth2 as oauth
-import urlparse
+import cgi
 from django.utils.http import urlquote
 from django.http import HttpResponseRedirect
 from django.conf import settings
@@ -62,7 +62,7 @@ def do_oauth_authentication(request):
         raise Exception("Invalid OAuth response.")
 
     # Step 2. Store the request token in a session for later use.
-    request.session['oauth_request_token'] = dict(urlparse.parse_qsl(content))
+    request.session['oauth_request_token'] = dict(cgi.parse_qsl(content))
 
     # Step 3. Redirect the user to the authentication URL.
     url = "%s?oauth_token=%s&oauth_callback=%s" % (
@@ -86,7 +86,7 @@ def oauth_authenticated(request):
         raise OAuthException("Invalid OAuth response.")
 
     del request.session['oauth_request_token']
-    request.session['oauth_access_token'] = dict(urlparse.parse_qsl(content))
+    request.session['oauth_access_token'] = dict(cgi.parse_qsl(content))
 
 
 def oauth_authentication_required(f):
