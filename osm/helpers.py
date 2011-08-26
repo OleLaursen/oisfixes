@@ -51,12 +51,12 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 
 consumer = oauth.Consumer(settings.OSM_OAUTH_KEY, settings.OSM_OAUTH_SECRET)
-client = oauth.Client(consumer)
 
 class OAuthException(Exception): pass
 
 def do_oauth_authentication(request):
-    # Step 1. Get a request token from Twitter.
+    # Step 1. Get a request token.
+    client = oauth.Client(consumer)
     resp, content = client.request(settings.OSM_BASE_URL + "oauth/request_token", "GET")
     if resp['status'] != '200':
         raise Exception("Invalid OAuth response.")
