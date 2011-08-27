@@ -10,6 +10,7 @@ from django.utils.encoding import iri_to_uri
 from django.utils.http import urlquote
 from django.core.urlresolvers import reverse as urlreverse
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from django import forms
 
 from osm.helpers import *
@@ -112,6 +113,21 @@ def search_for_address_nodes(request):
 
     results = ways.values()
     results.sort(key=lambda x: (x["municipality_no"], x["street_no"]))
+
+    # add existing corrections
+    way_filter = Q()
+    for x in results:
+        way_filter |= Q(municipality_no=x["municipality_no"], street_no=x["street_no"])
+    corrections = dict(((c.municipality_no, c.street_no), c)
+                       for c in WayCorrection.objects.filter(way_filter, deleted=None))
+
+    for x in results:
+        c = corrections.get((x["municipality_no"], x["street_no"]))
+        if c:
+            x["correction"] = u"%s &rarr; %s" % (c.old_name, c.new_name)
+        else:
+            x["correction"] = ""
+            
     
     return HttpResponse(simplejson.dumps(dict(
                 name=name,

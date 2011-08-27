@@ -27,8 +27,18 @@ form.search input.submit {
   font-size: 13px;
 }
 
+.searchPanes .results td {
+  vertical-align: top;
+}
+
 .searchPanes .results td .create {
   margin-left: 0.8em;
+}
+
+.searchPanes .results td span.correction {
+  padding-left: 1em;
+  font-style: italic;
+  font-size: 11px;
 }
 
 /* create report */
