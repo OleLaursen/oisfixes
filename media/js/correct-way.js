@@ -62,6 +62,7 @@ $(function () {
                     && $(this).data("streetNo") == autoselectStreetNo)
                     $(this).click();
             });
+            autoselectMunicipalityNo = autoselectStreetNo = null;
         }
     }
 
