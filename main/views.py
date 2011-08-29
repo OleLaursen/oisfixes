@@ -97,7 +97,7 @@ def search_for_address_nodes(request):
         for k in ois_street_keys:
             query = iri_to_uri(urlquote("node[%s=%s]" % (k, name)))
             try:
-                url_response = urllib2.urlopen(xapi_base_url + query, timeout=30)
+                url_response = urllib2.urlopen(xapi_base_url + query) # , timeout=30
                 xml = url_response.read()
             except urllib2.URLError, e:
                 if hasattr(e, "reason"):
