@@ -236,9 +236,15 @@ def get_way_corrections(request):
                    addr_street=1,
                    municipality_no=2,
                    street_no=3,
+                   id=4,
+                   comment=5,
+                   created=6,
+                   created_by=7,
                    )
 
-    data = [(x.old_name, x.new_name, x.municipality_no, x.street_no) for x in corrections]
+    data = [(x.old_name, x.new_name, x.municipality_no, x.street_no,
+             x.id, x.comment, x.created.strftime("%Y-%m-%dT%H:%M:%S"),
+             x.created_by.name) for x in corrections]
     
     return HttpResponse(simplejson.dumps(dict(
                 columns=columns,
