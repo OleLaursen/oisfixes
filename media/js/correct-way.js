@@ -10,7 +10,7 @@ $(function () {
 
     // searching
     function searchError(msg) {
-        searchPanes.find(".error p").text(msg);
+        searchPanes.find(".error p").html(msg);
         showPane(searchPanes, ".error");
     }
 

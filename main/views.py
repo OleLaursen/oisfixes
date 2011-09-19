@@ -96,15 +96,16 @@ def search_for_address_nodes(request):
         
         for k in ois_street_keys:
             query = iri_to_uri(urlquote("node[%s=%s]" % (k, name)))
+            url = xapi_base_url + query
             try:
-                url_response = urllib2.urlopen(xapi_base_url + query, timeout=60)
+                url_response = urllib2.urlopen(url, timeout=60)
                 xml = url_response.read()
             except urllib2.URLError, e:
                 if hasattr(e, "reason"):
                     reason = e.reason
                 else:
                     reason = unicode(e)
-                msg = u"Fejl ved søgning på OpenStreetMap XAPI (%s)" % reason
+                msg = u'Fejl ved søgning på OpenStreetMap XAPI (%s) - søgte på <a href="%s">denne URL</a>. Dette skyldes typisk at en OpenStreetMap-server er overbelastet i øjeblikket, du kan prøve igen senere.' % (reason, url)
                 return HttpResponse(simplejson.dumps(dict(error=msg)))
             
             extract_address_node_results(xml, ways)
