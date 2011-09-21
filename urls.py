@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.views.generic.simple import direct_to_template
 from django.conf import settings
 
 from django.contrib import admin
@@ -6,7 +7,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
-                       
+    (r'^robots\.txt$', direct_to_template, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
+
     (r'^$', 'main.views.intro'),
     (r'^vejnavn/$', 'main.views.correct_way'),
     (r'^rettelser/$', 'main.views.corrections'),
