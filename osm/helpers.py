@@ -57,9 +57,10 @@ class OAuthException(Exception): pass
 def do_oauth_authentication(request):
     # Step 1. Get a request token.
     client = oauth.Client(consumer)
-    resp, content = client.request(settings.OSM_BASE_URL + "oauth/request_token", "GET")
+    url = settings.OSM_BASE_URL + "oauth/request_token"
+    resp, content = client.request(url, "GET")
     if resp['status'] != '200':
-        raise OAuthException("Invalid OAuth response.")
+        raise OAuthException("OpenStreetMap server returned status code %s instead of 200 OK on %s" % (resp['status'], url))
 
     # Step 2. Store the request token in a session for later use.
     request.session['oauth_request_token'] = dict(cgi.parse_qsl(content))
@@ -81,9 +82,10 @@ def oauth_authenticated(request):
     client = oauth.Client(consumer, token)
 
     # Step 2. Request the authorized access token from the service.
-    resp, content = client.request(settings.OSM_BASE_URL + "oauth/access_token", "GET")
+    url = settings.OSM_BASE_URL + "oauth/access_token"
+    resp, content = client.request(url, "GET")
     if resp['status'] != '200':
-        raise OAuthException("Invalid OAuth response.")
+        raise OAuthException("OpenStreetMap server returned status code %s instead of 200 OK on %s" % (resp['status'], url))
 
     del request.session['oauth_request_token']
     request.session['oauth_access_token'] = dict(cgi.parse_qsl(content))
@@ -102,7 +104,7 @@ def oauth_authentication_required(f):
         try:
             return do_oauth_authentication(request)
         except OAuthException, e:
-            return HttpResponse("OAuth failed (%s)" % e)
+            return HttpResponse("Communication with OpenStreetmap server failed (%s)" % e)
 
     return inner
 
