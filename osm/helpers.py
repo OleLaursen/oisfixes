@@ -59,7 +59,7 @@ def do_oauth_authentication(request):
     client = oauth.Client(consumer)
     resp, content = client.request(settings.OSM_BASE_URL + "oauth/request_token", "GET")
     if resp['status'] != '200':
-        raise Exception("Invalid OAuth response.")
+        raise OAuthException("Invalid OAuth response.")
 
     # Step 2. Store the request token in a session for later use.
     request.session['oauth_request_token'] = dict(cgi.parse_qsl(content))
