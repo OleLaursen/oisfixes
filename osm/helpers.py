@@ -47,7 +47,7 @@ def extract_address_node_results(xml, ways):
 import oauth2 as oauth
 import cgi
 from django.utils.http import urlquote
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 
 consumer = oauth.Consumer(settings.OSM_OAUTH_KEY, settings.OSM_OAUTH_SECRET)
