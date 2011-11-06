@@ -99,13 +99,10 @@ def oauth_authentication_required(f):
                 oauth_authenticated(request)
 
                 return HttpResponseRedirect(request.path)
-
-        return do_oauth_authentication(request)
-
         try:
-            pass
+            return do_oauth_authentication(request)
         except OAuthException, e:
-            return HttpResponse("OAuth failed") # FIXME: do something
+            return HttpResponse("OAuth failed (%s)" % e)
 
     return inner
 
