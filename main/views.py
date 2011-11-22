@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import urllib2
+import urllib2, socket
 
 from django.template.loader import render_to_string
 from django.template import RequestContext
@@ -100,7 +100,7 @@ def search_for_address_nodes(request):
             try:
                 url_response = urllib2.urlopen(url, timeout=60)
                 xml = url_response.read()
-            except urllib2.URLError, e:
+            except (urllib2.URLError, socket.timeout) as e:
                 if hasattr(e, "reason"):
                     reason = e.reason
                 else:
