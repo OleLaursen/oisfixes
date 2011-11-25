@@ -58,7 +58,11 @@ def do_oauth_authentication(request):
     # Step 1. Get a request token.
     client = oauth.Client(consumer)
     url = settings.OSM_BASE_URL + "oauth/request_token"
-    resp, content = client.request(url, "GET")
+    try:
+        resp, content = client.request(url, "GET")
+    except Exception, e:
+        raise OAuthException(u"Error sending request to OpenStreetMap server on %s (%s)" % (url, e))
+
     if resp['status'] != '200':
         raise OAuthException("OpenStreetMap server returned status code %s instead of 200 OK on %s" % (resp['status'], url))
 
