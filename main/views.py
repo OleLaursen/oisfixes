@@ -100,7 +100,7 @@ def search_for_address_nodes(request):
             try:
                 url_response = urllib2.urlopen(url, timeout=60)
                 xml = url_response.read()
-            except (urllib2.URLError, socket.timeout) as e:
+            except (urllib2.URLError, socket.timeout, socket.error) as e:
                 if hasattr(e, "reason"):
                     reason = e.reason
                 else:
