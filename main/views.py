@@ -90,13 +90,13 @@ def search_for_address_nodes(request):
     if name:
         # ask OpenStreetMap XAPI for address nodes
         
-        xapi_base_url = "http://open.mapquestapi.com/xapi/api/0.6/"
+        #xapi_base_url = "http://open.mapquestapi.com/xapi/api/0.6/"
+        xapi_base_url = "http://www.overpass-api.de/api/xapi?"
 
         ois_street_keys = ["addr:street", "osak:street"]
         
         for k in ois_street_keys:
-            #
-            query = iri_to_uri("node[%s=%s]" % (urlquote(k), urlquote('"%s"' % name)))
+            query = iri_to_uri("node[%s=%s]" % (urlquote(k), urlquote(name)))
             url = xapi_base_url + query
             try:
                 url_response = urllib2.urlopen(url, timeout=60)
@@ -106,7 +106,7 @@ def search_for_address_nodes(request):
                     reason = e.reason
                 else:
                     reason = unicode(e)
-                msg = u'Fejl ved søgning på OpenStreetMap XAPI (%s) - søgte på <a href="%s">denne URL</a>. Dette skyldes typisk at en OpenStreetMap-server er overbelastet i øjeblikket, du kan prøve igen senere.' % (reason, url)
+                msg = u'Fejl ved søgning på OpenStreetMap XAPI (%s). Dette skyldes typisk at en OpenStreetMap-server er overbelastet i øjeblikket, du kan prøve igen senere. Du kan også prøve at gå til <a href="%s">den forsøgte søgning</a> for at se hvad fejlen helt nøjagtigt er.' % (reason, url)
                 return HttpResponse(simplejson.dumps(dict(error=msg)))
             
             extract_address_node_results(xml, ways)
