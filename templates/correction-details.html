@@ -9,10 +9,10 @@
   <tr><td>Nyt vejnavn:</td><td>{{ c.new_name }}</td></tr>
   <tr><td>Forklaring:</td><td>{{ c.comment }}</td></tr>
   <tr><td>Oprettet:</td><td>{{ c.created|date:"G:i j/n-Y" }}</td></tr>
-  <tr><td>- af:</td><td><a href="http://www.openstreetmap.org/user/{{ c.created_by.name }}">{{ c.created_by }}</a>{# (<a href="?bruger={{ c.created_by_id }}">vis alle</a>,<a href="http://www.openstreetmap.org/user/{{ c.created_by.name }}">OpenStreetMap-profil</a>) #}</td></tr>
+  <tr><td>- af:</td><td><a href="https://www.openstreetmap.org/user/{{ c.created_by.name }}">{{ c.created_by }}</a>{# (<a href="?bruger={{ c.created_by_id }}">vis alle</a>,<a href="https://www.openstreetmap.org/user/{{ c.created_by.name }}">OpenStreetMap-profil</a>) #}</td></tr>
   {% if c.deleted %}
   <tr><td>Slettet:</td><td>{{ c.deleted|date:"G:i j/n-Y" }}</td></tr>
-  <tr><td>- af:</td><td><a href="http://www.openstreetmap.org/user/{{ c.deleted_by.name }}">{{ c.deleted_by }}</a> {#(<a href="?bruger={{ c.deleted_by_id }}&slettet=1">vis alle</a>, OpenStreetMap-profil</a>)#}</td></tr>
+  <tr><td>- af:</td><td><a href="https://www.openstreetmap.org/user/{{ c.deleted_by.name }}">{{ c.deleted_by }}</a> {#(<a href="?bruger={{ c.deleted_by_id }}&slettet=1">vis alle</a>, OpenStreetMap-profil</a>)#}</td></tr>
   <tr><td>- bemærkning:</td><td><a {% if c.deleted_replaced_by %}href="{% url main.views.correction_details correction_id=c.deleted_replaced_by_id %}"{% endif %}>{{ c.deleted_comment }}</a></td></tr>
   {% endif %}
 </table>
@@ -31,8 +31,8 @@
 <p class="explanation">(gemt ved oprettelse)</p>
 
 <p class="buttons" >
-  <a href="http://www.openstreetmap.org/?node={{ c.node_id }}">adressepunkt</a>
-  <a href="http://www.openstreetmap.org/?lat={{ c.lat }}&lon={{ c.lon }}&zoom=17">placering</a>
+  <a href="https://www.openstreetmap.org/?node={{ c.node_id }}">adressepunkt</a>
+  <a href="https://www.openstreetmap.org/?lat={{ c.lat }}&lon={{ c.lon }}&zoom=17">placering</a>
 </p>
 
 {% endcomment %}

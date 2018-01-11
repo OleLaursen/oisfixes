@@ -90,8 +90,8 @@ def search_for_address_nodes(request):
     if name:
         # ask OpenStreetMap XAPI for address nodes
         
-        #xapi_base_url = "http://open.mapquestapi.com/xapi/api/0.6/"
-        xapi_base_url = "http://www.overpass-api.de/api/xapi?"
+        #xapi_base_url = "https://open.mapquestapi.com/xapi/api/0.6/"
+        xapi_base_url = "https://www.overpass-api.de/api/xapi?"
 
         ois_street_keys = ["addr:street", "osak:street"]
         
@@ -213,7 +213,7 @@ def correction_details(request, correction_id):
     correction = get_object_or_404(WayCorrection, id=correction_id)
     
     request.page = Page()
-    request.page.js.append("http://www.openlayers.org/api/OpenLayers.js")
+    request.page.js.append("https://www.openlayers.org/api/OpenLayers.js")
     request.page.js.append("map.js")
     request.page.css.append("correction-details.css")
     request.page.title = u"OIS-rettelse %s" % correction.id

@@ -49,7 +49,7 @@
     {% endif %}
     <td><a class="info button" href="{% url main.views.correction_details correction_id=c.id %}">info</a></td>
     <td><a class="button" href="{% url main.views.correct_way %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">ret</a></td>
-    <td><a title="Vis et af vejens adressepunkter på OpenStreetMap" href="http://www.openstreetmap.org/?node={{ c.node_id }}"><img src="{{ MEDIA_URL }}images/osm.png"></a></td>
+    <td><a title="Vis et af vejens adressepunkter på OpenStreetMap" href="https://www.openstreetmap.org/?node={{ c.node_id }}"><img src="{{ MEDIA_URL }}images/osm.png"></a></td>
   </tr>
   {% endfor %}
 </table>
