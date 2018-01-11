@@ -1,15 +1,9 @@
-# Django settings for osakfixer project.
-
 import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    ('Ole Laursen', 'olau@hardworking.dk'),
-)
-
-MANAGERS = ADMINS
+MANAGERS = ADMINS = []
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
