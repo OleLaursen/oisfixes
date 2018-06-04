@@ -42,7 +42,7 @@ def extract_address_node_results(xml, ways):
             node_city=extract_value_from_keys(n, city_keys)
             )
 
-# requires python-oauth2, from the example in the documentation
+# requires python3-oauth2client, from the example in the documentation
 # at https://github.com/dgouldin/python-oauth2
 import oauth2 as oauth
 import cgi
@@ -60,13 +60,14 @@ def do_oauth_authentication(request):
     url = settings.OSM_BASE_URL + "oauth/request_token"
     try:
         resp, content = client.request(url, "GET")
-    except Exception, e:
-        raise OAuthException(u"Error sending request to OpenStreetMap server on %s (%s)" % (url, e))
+    except Exception as e:
+        raise OAuthException("Error sending request to OpenStreetMap server on %s (%s)" % (url, e))
 
     if resp['status'] != '200':
         raise OAuthException("OpenStreetMap server returned status code %s instead of 200 OK on %s" % (resp['status'], url))
 
     # Step 2. Store the request token in a session for later use.
+    content = content.decode()
     request.session['oauth_request_token'] = dict(cgi.parse_qsl(content))
 
     # Step 3. Redirect the user to the authentication URL.
@@ -91,6 +92,7 @@ def oauth_authenticated(request):
     if resp['status'] != '200':
         raise OAuthException("OpenStreetMap server returned status code %s instead of 200 OK on %s" % (resp['status'], url))
 
+    content = content.decode()
     del request.session['oauth_request_token']
     request.session['oauth_access_token'] = dict(cgi.parse_qsl(content))
 
@@ -107,7 +109,7 @@ def oauth_authentication_required(f):
                 return HttpResponseRedirect(request.path)
         try:
             return do_oauth_authentication(request)
-        except OAuthException, e:
+        except OAuthException as e:
             return HttpResponse("Communication with OpenStreetmap server failed (%s)" % e)
 
     return inner
@@ -123,6 +125,8 @@ def fill_in_osm_user(request):
     if resp['status'] != '200':
         raise OAuthException("Invalid user details response %s." % resp['status'])
 
+    content = content.decode()
+
     user = ElementTree.fromstring(content).find("user")
     try:
         user_id = int(user.attrib["id"])
@@ -131,7 +135,7 @@ def fill_in_osm_user(request):
         raise OAuthException("Couldn't parse user response.")
 
     # save user details in database
-    from main.models import OsmUser
+    from oisfixes.models import OsmUser
 
     try:
         user = OsmUser.objects.get(id=user_id)

@@ -2,7 +2,7 @@
 
 <p>Søg efter OIS/OSAK-adressepunkter med forkert vejnavn (fx "Vedstedve"):</p>
 
-<form class="search" method="GET" action="{% url main.views.search_for_address_nodes %}">
+<form class="search" method="GET" action="{% url "search_for_address_nodes" %}">
   <input class="name" type="text" name="name" value="{{ name }}">
   <input class="submit" type="submit" value="Søg">
 </form>
@@ -34,11 +34,11 @@
     <p></p>
   </div>
   <div style="display:none" class="loading">
-    <p><img src="{{ MEDIA_URL }}images/ajax-loader.gif">
+    <p><img src="{{ STATIC_URL }}images/ajax-loader.gif">
     Slår op efter punkter med addr:street eller osak:street sat til <span class="name"></span>.</p>
   </div>
 
-  <img id="osm" style="display:none" src="{{ MEDIA_URL }}images/osm.png">
+  <img id="osm" style="display:none" src="{{ STATIC_URL }}images/osm.png">
 </div>
 
 <div class="create" style="display:none">
@@ -46,7 +46,7 @@
 
   <p class="result"></p>
   
-  <form method="POST" action="{% url main.views.create_way_correction %}">
+  <form method="POST" action="{% url "create_way_correction" %}">
     <input type="hidden" name="node_id">
     <input type="hidden" name="lat">
     <input type="hidden" name="lon">
@@ -85,7 +85,7 @@
 </div>
 
 
-<p class="back">Tilbage til <a href="{% url main.views.intro %}">forside</a>.</p>
+<p class="back">Tilbage til <a href="{% url "intro_page" %}">forside</a>.</p>
 
 <script>
   var autoselectMunicipalityNo = {{ municipality_no }},

@@ -1,26 +1,20 @@
-from django.conf.urls.defaults import *
-from django.views.generic.simple import direct_to_template
+from django.urls import path, re_path
 from django.conf import settings
+import django.views.static
 
-from django.contrib import admin
-admin.autodiscover()
+import oisfixes.views
 
-urlpatterns = patterns('',
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
-    (r'^robots\.txt$', direct_to_template, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
+urlpatterns = [
+    re_path(r'^(?:media|static)/(.*)$', django.views.static.serve, {'document_root': settings.STATIC_ROOT }),
+    path('robots.txt', oisfixes.views.robots_txt, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
 
-    (r'^$', 'main.views.intro'),
-    (r'^vejnavn/$', 'main.views.correct_way'),
-    (r'^rettelser/$', 'main.views.corrections'),
-    (r'^rettelser/(?P<correction_id>[0-9]+)/slet/$', 'main.views.delete_correction'),
-    (r'^rettelser/(?P<correction_id>[0-9]+)/$', 'main.views.correction_details'),
+    path('', oisfixes.views.intro, name="intro_page"),
+    path('vejnavn/', oisfixes.views.correct_way, name="correct_way"),
+    path('rettelser/', oisfixes.views.corrections, name="corrections_overview"),
+    path('rettelser/<int:correction_id>/slet/', oisfixes.views.delete_correction, name="delete_corrections"),
+    path('rettelser/<int:correction_id>/', oisfixes.views.correction_details, name="correction_details"),
 
-    (r'^api/searchaddressnodes/$', 'main.views.search_for_address_nodes'),
-    (r'^api/createwaycorrection/$', 'main.views.create_way_correction'),
-    (r'^api/getwaycorrections/$', 'main.views.get_way_corrections'),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    (r'^admin/', include(admin.site.urls)),
-)
+    path('api/searchaddressnodes/', oisfixes.views.search_for_address_nodes, name="search_for_address_nodes"),
+    path('api/createwaycorrection/', oisfixes.views.create_way_correction, name="create_way_correction"),
+    path('api/getwaycorrections/', oisfixes.views.get_way_corrections, name="get_way_corrections"),
+]

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import *
+from .models import *
 
 class WayCorrectionAdmin(admin.ModelAdmin):
     list_display = ("id", "municipality_no", "street_no", "old_name", "new_name", "created", "created_by", "deleted", "deleted_by")

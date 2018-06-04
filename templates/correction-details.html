@@ -13,14 +13,14 @@
   {% if c.deleted %}
   <tr><td>Slettet:</td><td>{{ c.deleted|date:"G:i j/n-Y" }}</td></tr>
   <tr><td>- af:</td><td><a href="https://www.openstreetmap.org/user/{{ c.deleted_by.name }}">{{ c.deleted_by }}</a> {#(<a href="?bruger={{ c.deleted_by_id }}&slettet=1">vis alle</a>, OpenStreetMap-profil</a>)#}</td></tr>
-  <tr><td>- bemærkning:</td><td><a {% if c.deleted_replaced_by %}href="{% url main.views.correction_details correction_id=c.deleted_replaced_by_id %}"{% endif %}>{{ c.deleted_comment }}</a></td></tr>
+  <tr><td>- bemærkning:</td><td><a {% if c.deleted_replaced_by %}href="{% url "correction_details" correction_id=c.deleted_replaced_by_id %}"{% endif %}>{{ c.deleted_comment }}</a></td></tr>
   {% endif %}
 </table>
 
 {% if not c.deleted %}
 <p class="buttons">
-  <a href="{% url main.views.correct_way %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">ret</a>
-  <a href="{% url main.views.delete_correction correction_id=c.id %}" rel="nofollow">slet</a>
+  <a href="{% url "correct_way" %}?navn={{ c.old_name }}&kmn={{ c.municipality_no }}&vej={{ c.street_no }}">ret</a>
+  <a href="{% url "delete_correction" correction_id=c.id %}" rel="nofollow">slet</a>
   <a href="http://osm.ter.dk/address_street.php?MunicipalityCode={{ c.municipality_no }}&StreetCode={{ c.street_no }}">genimportér adressepunkter</a>
 </p>
 {% endif %}
@@ -37,4 +37,4 @@
 
 {% endcomment %}
 
-<p class="back">Tilbage til <a href="{% url main.views.intro %}">forside</a>.</p>
+<p class="back">Tilbage til <a href="{% url "intro_page" %}">forside</a>.</p>

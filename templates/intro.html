@@ -6,8 +6,8 @@ importeret i <a
 href="https://www.openstreetmap.org/">OpenStreetMap</a>.</p>
 
 <div class="buttons">
-  <a href="{% url main.views.corrections %}">Vis rettelser</a>
-  <a href="{% url main.views.correct_way %}">Ret et vejnavn</a>
+  <a href="{% url "corrections_overview" %}">Vis rettelser</a>
+  <a href="{% url "correct_way" %}">Ret et vejnavn</a>
 </div>
 
 <h2>Baggrund</h2>
@@ -36,13 +36,13 @@ href="https://www.openstreetmap.org/user/new">oprette en</a>.</p>
 
 <h2>JSON-API</h2>
 
-<p class="json">Du kan hente <a href="{% url main.views.get_way_corrections %}">alle rettelser som JSON</a>. Svaret
+<p class="json">Du kan hente <a href="{% url "get_way_corrections" %}">alle rettelser som JSON</a>. Svaret
 indeholder dataene som arrays i <code>data</code> og
 kolonnenavne med tilhørende index som et map i
 <code>columns</code>.</p>
 
 <p>JSON-tjenesten understøtter GET-parametrene
-<code>municipality_no</code> og <code>street_no</code> til at afgrænse søgningen, <a href="{% url main.views.get_way_corrections %}?municipality_no=510">her er f.eks. en søgning på kommunekode 510</a>.</p>
+<code>municipality_no</code> og <code>street_no</code> til at afgrænse søgningen, <a href="{% url "get_way_corrections" %}?municipality_no=510">her er f.eks. en søgning på kommunekode 510</a>.</p>
 
 
 <h2>Hvem står bag</h2>

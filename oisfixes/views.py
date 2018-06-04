@@ -1,35 +1,38 @@
 # -*- coding: utf-8 -*-
 
-import urllib2, socket
+import urllib.request, urllib.error, urllib.parse, socket
+import datetime
 
 from django.template.loader import render_to_string
-from django.template import RequestContext
-from django.http import HttpResponse, HttpResponseForbidden
-from django.utils import simplejson
+from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.utils.encoding import iri_to_uri
 from django.utils.http import urlquote
-from django.core.urlresolvers import reverse as urlreverse
-from django.shortcuts import get_object_or_404
+from django.urls import reverse as urlreverse
+from django.shortcuts import get_object_or_404, render
 from django.db.models import Q
 from django import forms
 
-from osm.helpers import *
-from main.helpers import *
-from main.models import *
+from osm.helpers import osm_user_required, extract_address_node_results
+from osm.models import OsmUser
+from oisfixes.helpers import Page, render_page
+from oisfixes.models import WayCorrection
+
+def robots_txt(request):
+    return render("robots.txt", {}, content_type="text/plain")
 
 def intro(request):
     request.page = Page()
-    request.page.title = u"OIS-rettelser til OpenStreetMap"
+    request.page.title = "OIS-rettelser til OpenStreetMap"
     request.page.css.append("intro.css")
     request.page.content = render_to_string("intro.html",
-                                            context_instance=RequestContext(request))
+                                            request=request)
     
     return render_page(request)
 
 @osm_user_required
 def correct_way(request):
     request.page = Page()
-    request.page.title = u"Rapportér rettelse til OIS-vejnavn"
+    request.page.title = "Rapportér rettelse til OIS-vejnavn"
     request.page.js.append("correct-way.js")
     request.page.css.append("correct-way.css")
 
@@ -44,11 +47,12 @@ def correct_way(request):
         municipality_no = "null"
         street_no = "null"
         
-    request.page.content = render_to_string("correct-way.html",
-                                            dict(name=name,
-                                                 municipality_no=municipality_no,
-                                                 street_no=street_no),
-                                            context_instance=RequestContext(request))
+    request.page.content = render_to_string(
+        "correct-way.html", {
+            "name": name,
+            "municipality_no": municipality_no,
+            "street_no": street_no
+        }, request=request)
 
     return render_page(request)
 
@@ -57,7 +61,7 @@ def delete_correction(request, correction_id):
     correction = get_object_or_404(WayCorrection, id=correction_id)
     
     request.page = Page()
-    request.page.title = u"Slet rettelse %s" % correction.id
+    request.page.title = "Slet rettelse %s" % correction.id
 
     msg = ""
 
@@ -69,14 +73,15 @@ def delete_correction(request, correction_id):
             correction.deleted_comment = comment
             correction.save()
 
-            return HttpResponseRedirect(urlreverse("main.views.correction_details", kwargs=dict(correction_id=correction.id)))
+            return HttpResponseRedirect(urlreverse("correction_details", kwargs=dict(correction_id=correction.id)))
         else:
-            msg = u"Du skal skrive en forklaring."
+            msg = "Du skal skrive en forklaring."
     
-    request.page.content = render_to_string("delete-correction.html",
-                                            dict(c=correction,
-                                                 msg=msg),
-                                            context_instance=RequestContext(request))
+    request.page.content = render_to_string(
+        "delete-correction.html", {
+            "c": correction,
+            "msg": msg
+        }, request=request)
 
     return render_page(request)
 
@@ -99,21 +104,23 @@ def search_for_address_nodes(request):
             query = iri_to_uri("node[%s=%s]" % (urlquote(k), urlquote(name)))
             url = xapi_base_url + query
             try:
-                url_response = urllib2.urlopen(url, timeout=60)
+                url_response = urllib.request.urlopen(url, timeout=60)
                 xml = url_response.read()
-            except (urllib2.URLError, socket.timeout, socket.error) as e:
+            except (urllib.error.URLError, socket.timeout, socket.error) as e:
                 if hasattr(e, "reason"):
                     reason = e.reason
                 else:
-                    reason = unicode(e)
-                msg = u'Fejl ved søgning på OpenStreetMap XAPI (%s). Dette skyldes typisk at en OpenStreetMap-server er overbelastet i øjeblikket, du kan prøve igen senere. Du kan også prøve at gå til <a href="%s">den forsøgte søgning</a> for at se hvad fejlen helt nøjagtigt er.' % (reason, url)
-                return HttpResponse(simplejson.dumps(dict(error=msg)))
+                    reason = str(e)
+                msg = 'Fejl ved søgning på OpenStreetMap XAPI (%s). Dette skyldes typisk at en OpenStreetMap-server er overbelastet i øjeblikket, du kan prøve igen senere. Du kan også prøve at gå til <a href="%s">den forsøgte søgning</a> for at se hvad fejlen helt nøjagtigt er.' % (reason, url)
+                return JsonResponse({
+                    "error": msg
+                })
             
             extract_address_node_results(xml, ways)
             
         #extract_address_node_results(open("tmp.xml").read(), ways)
 
-    results = ways.values()
+    results = list(ways.values())
     results.sort(key=lambda x: (x["municipality_no"], x["street_no"]))
 
     # add existing corrections
@@ -126,15 +133,15 @@ def search_for_address_nodes(request):
     for x in results:
         c = corrections.get((x["municipality_no"], x["street_no"]))
         if c:
-            x["correction"] = u"%s &rarr; %s" % (c.old_name, c.new_name)
+            x["correction"] = "%s &rarr; %s" % (c.old_name, c.new_name)
         else:
             x["correction"] = ""
             
     
-    return HttpResponse(simplejson.dumps(dict(
-                name=name,
-                results=results,
-                )), mimetype="application/json")
+    return JsonResponse({
+        "name": name,
+        "results": results,
+    })
 
 
 class WayCorrectionForm(forms.ModelForm):
@@ -163,7 +170,7 @@ def create_way_correction(request):
         for o in old_corrections:
             o.deleted = correction.created
             o.deleted_by = correction.created_by
-            o.deleted_comment = u"Erstattet af %s" % correction.id
+            o.deleted_comment = "Erstattet af %s" % correction.id
             o.deleted_replaced_by = correction
             o.save()
 
@@ -173,19 +180,19 @@ def create_way_correction(request):
                 len(old_corrections),
                 "rettelse" if len(old_corrections) == 1 else "rettelser")
 
-        report_url = urlreverse("main.views.correction_details", kwargs=dict(correction_id=correction.id))
-        result = u'Oprettede <a href="%s">ny rettelse</a>%s. Du kan <a href="http://osm.ter.dk/address_street.php?MunicipalityCode=%s&StreetCode=%s">genimportere adressepunkterne med importeringsscriptet</a>.' % (report_url, replaced, correction.municipality_no, correction.street_no)
+        report_url = urlreverse("correction_details", kwargs=dict(correction_id=correction.id))
+        result = 'Oprettede <a href="%s">ny rettelse</a>%s. Du kan <a href="http://osm.ter.dk/address_street.php?MunicipalityCode=%s&StreetCode=%s">genimportere adressepunkterne med importeringsscriptet</a>.' % (report_url, replaced, correction.municipality_no, correction.street_no)
     else:
-        result = u"Fejl ved fortolkning af indsendte data."
+        result = "Fejl ved fortolkning af indsendte data."
     
-    return HttpResponse(simplejson.dumps(dict(
-                result=result,
-                )), mimetype="application/json")
+    return JsonResponse({
+        "result": result,
+    })
 
 
 def corrections(request):
     request.page = Page()
-    request.page.title = u"OIS-rettelser til OpenStreetMap"
+    request.page.title = "OIS-rettelser til OpenStreetMap"
     request.page.css.append("corrections.css")
 
     corrections = WayCorrection.objects.all().order_by("-created").select_related("created_by", "deleted_by")
@@ -199,13 +206,14 @@ def corrections(request):
     user = request.GET.get("bruger")
     if user:
         user = get_object_or_404(OsmUser, id=user)
-        corrections = corrections.filter(models.Q(created_by=user) | models.Q(deleted_by=user))
+        corrections = corrections.filter(Q(created_by=user) | Q(deleted_by=user))
 
-    request.page.content = render_to_string("corrections.html",
-                                            dict(corrections=corrections,
-                                                 show_deleted=deleted,
-                                                 show_user=user),
-                                            context_instance=RequestContext(request))
+    request.page.content = render_to_string(
+        "corrections.html", {
+            "corrections": corrections,
+            "show_deleted": deleted,
+            "show_user": user
+        }, request=request)
         
     return render_page(request)
 
@@ -216,10 +224,11 @@ def correction_details(request, correction_id):
     request.page.js.append("https://www.openlayers.org/api/OpenLayers.js")
     request.page.js.append("map.js")
     request.page.css.append("correction-details.css")
-    request.page.title = u"OIS-rettelse %s" % correction.id
-    request.page.content = render_to_string("correction-details.html",
-                                            dict(c=correction),
-                                            context_instance=RequestContext(request))
+    request.page.title = "OIS-rettelse %s" % correction.id
+    request.page.content = render_to_string(
+        "correction-details.html", {
+        "c": correction
+        }, request=request)
 
     return render_page(request)
 
@@ -248,8 +257,8 @@ def get_way_corrections(request):
              x.id, x.comment, x.created.strftime("%Y-%m-%dT%H:%M:%S"),
              x.created_by.name) for x in corrections]
     
-    return HttpResponse(simplejson.dumps(dict(
-                columns=columns,
-                data=data,
-                )), mimetype="application/json")
+    return JsonResponse({
+        "columns": columns,
+        "data": data,
+    })
     

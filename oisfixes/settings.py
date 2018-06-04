@@ -1,11 +1,12 @@
 import os
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 MANAGERS = ADMINS = []
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+
+ALLOWED_HOSTS = ["*"]
 
 DATABASES = {
     'default': {
@@ -28,49 +29,38 @@ USE_I18N = True
 USE_L10N = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-ADMIN_MEDIA_PREFIX = '/adminmedia/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
-
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'modtimeurls.ModTimeUrlsMiddleware',
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages'
-    )
+    'utils.modtimeurls.ModTimeUrlsMiddleware',
+]
 
 ROOT_URLCONF = 'urls'
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "templates"),
-)
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'django/contrib/admin/templates')],
+        "OPTIONS": {
+            "context_processors": [
+                'django.template.context_processors.static',
+                'django.template.context_processors.request',
+            ],
+            #"string_if_invalid": "0xdeadbeef",
+        }
+    }
+]
 
-INSTALLED_APPS = (
-    'django.contrib.auth',
+INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.admin',
     'osm',
-    'main',
-)
+    'oisfixes',
+]
 
 SESSION_COOKIE_AGE = 6 * 30 * 24 * 60 * 60
 
@@ -78,6 +68,6 @@ SESSION_COOKIE_AGE = 6 * 30 * 24 * 60 * 60
 # in local_settings.py which should not be committed.
 
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     pass
