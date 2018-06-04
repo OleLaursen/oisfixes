@@ -6,7 +6,7 @@ import oisfixes.views
 
 urlpatterns = [
     re_path(r'^(?:media|static)/(.*)$', django.views.static.serve, {'document_root': settings.STATIC_ROOT }),
-    path('robots.txt', oisfixes.views.robots_txt, {'template': 'robots.txt', 'mimetype': 'text/plain'}),
+    path('robots.txt', oisfixes.views.robots_txt),
 
     path('', oisfixes.views.intro, name="intro_page"),
     path('vejnavn/', oisfixes.views.correct_way, name="correct_way"),

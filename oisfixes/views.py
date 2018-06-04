@@ -18,7 +18,7 @@ from oisfixes.helpers import Page, render_page
 from oisfixes.models import WayCorrection
 
 def robots_txt(request):
-    return render("robots.txt", {}, content_type="text/plain")
+    return render(request, "robots.txt", {}, content_type="text/plain")
 
 def intro(request):
     request.page = Page()
