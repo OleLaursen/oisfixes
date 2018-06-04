@@ -11,7 +11,7 @@ urlpatterns = [
     path('', oisfixes.views.intro, name="intro_page"),
     path('vejnavn/', oisfixes.views.correct_way, name="correct_way"),
     path('rettelser/', oisfixes.views.corrections, name="corrections_overview"),
-    path('rettelser/<int:correction_id>/slet/', oisfixes.views.delete_correction, name="delete_corrections"),
+    path('rettelser/<int:correction_id>/slet/', oisfixes.views.delete_correction, name="delete_correction"),
     path('rettelser/<int:correction_id>/', oisfixes.views.correction_details, name="correction_details"),
 
     path('api/searchaddressnodes/', oisfixes.views.search_for_address_nodes, name="search_for_address_nodes"),
