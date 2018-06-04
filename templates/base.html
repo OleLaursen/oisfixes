@@ -5,7 +5,7 @@
     <title>{{ request.page.title }}</title>
     {% for filename in request.page.css %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/{{ filename }}">{% endfor %}
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/jquery-1.11.3.min.js"></script>
     {% for filename in request.page.js %}
     
     <script type="text/javascript" src="{% if "http://" in filename %}{{ filename }}{% else %}{{ STATIC_URL }}js/{{ filename }}{% endif %}"></script>{% endfor %}
