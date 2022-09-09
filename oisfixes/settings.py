@@ -22,7 +22,7 @@ DATABASES = {
 # Define this in local_settings.py
 SECRET_KEY = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 
-TIME_ZONE = None
+TIME_ZONE = 'Europe/Copenhagen'
 LANGUAGE_CODE = 'da-dk'
 SITE_ID = 1
 USE_I18N = True
