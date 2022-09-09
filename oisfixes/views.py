@@ -6,7 +6,6 @@ import datetime
 from django.template.loader import render_to_string
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.utils.encoding import iri_to_uri
-from django.utils.http import urlquote
 from django.urls import reverse as urlreverse
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Q
@@ -101,7 +100,7 @@ def search_for_address_nodes(request):
         ois_street_keys = ["addr:street", "osak:street"]
         
         for k in ois_street_keys:
-            query = iri_to_uri("node[%s=%s]" % (urlquote(k), urlquote(name)))
+            query = iri_to_uri("node[%s=%s]" % (urllib.parse.quote(k), urllib.parse.quote(name)))
             url = xapi_base_url + query
             try:
                 url_response = urllib.request.urlopen(url, timeout=60)

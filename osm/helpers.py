@@ -46,7 +46,7 @@ def extract_address_node_results(xml, ways):
 # at https://github.com/dgouldin/python-oauth2
 import oauth2 as oauth
 import cgi
-from django.utils.http import urlquote
+import urllib.parse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 
@@ -74,7 +74,7 @@ def do_oauth_authentication(request):
     url = "%s?oauth_token=%s&oauth_callback=%s" % (
         settings.OSM_BASE_URL + "oauth/authorize",
         request.session['oauth_request_token']['oauth_token'],
-        urlquote(request.build_absolute_uri(request.get_full_path() + "?oauth_authenticated=1"))
+        urllib.parse.quote(request.build_absolute_uri(request.get_full_path() + "?oauth_authenticated=1"))
         )
 
     return HttpResponseRedirect(url)
